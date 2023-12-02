@@ -28,31 +28,52 @@ using (StreamReader reader = new StreamReader(filename))
             {
                 //Then check if the number is written
                 string temp;
+                int highestj = 1;
                 if (i+5 > line.Length)
                 {
-                    temp = line.Substring(i);
+                    highestj = line.Length - i;
                 }
                 else
                 {
-                    temp = line.Substring(i, 5);
+                    highestj = 5;
                 }
 
                 foreach (string writnum in writtenNumbers.Keys)
                 {
-                    if (temp.Contains(writnum) && num1Found)
+                    bool found = false;
+                    for (int j = 3; j <= highestj; j++)
                     {
-                        num2 = writtenNumbers[writnum];
+                        //make sure there is not a digit in the other chars
+                        temp = line.Substring(i, j);
+                        if (temp.Any(char.IsDigit) && j==3)
+                        {
+                            found = true;
+                            break;
+                        }
+                        else if (temp.Contains(writnum) && num1Found)
+                        {
+                            num2 = writtenNumbers[writnum];
+                            found = true;
+                            break;
+                        }
+                        else if (temp.Contains(writnum))
+                        {
+                            num1Found = true;
+                            num1 = writtenNumbers[writnum];
+                            num2 = writtenNumbers[writnum];
+                            found = true;
+                            break;
+                        }
                     }
-                    else if (temp.Contains(writnum))
+                    if (found)
                     {
-                        num1Found = true;
-                        num1 = writtenNumbers[writnum];
-                        num2 = writtenNumbers[writnum];
+                        break;
                     }
                 }
             }
         }
-        numbers.Add(int.Parse(num1 + num2));
+        string listed = num1.ToString() + num2.ToString();
+        numbers.Add(int.Parse(listed));
     }
 }
 
