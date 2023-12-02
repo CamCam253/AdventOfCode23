@@ -1,6 +1,7 @@
 ﻿// See https://adventofcode.com/2023/day/1 for the assingment
 string filename = @"..\\..\\..\\input.txt";
 List<int> numbers = new List<int>();
+Dictionary<string, string> writtenNumbers = new Dictionary<string, string> { {"one","1"},{"two","2"},{"three","3"},{"four","4"},{"five","5"},{"six","6"},{"seven","7"},{"eight","8"},{"nine","9"}};
 
 using (StreamReader reader = new StreamReader(filename))
 {
@@ -12,6 +13,7 @@ using (StreamReader reader = new StreamReader(filename))
         string num2 = "0";
         for (int i = 0; i < line.Length; i++)
         {
+            //first check if current char is a number
             if (Char.IsDigit(line[i]) && num1Found)
             {
                 num2 = "" + line[i];
@@ -21,6 +23,33 @@ using (StreamReader reader = new StreamReader(filename))
                 num1Found = true;
                 num1 = "" + line[i];
                 num2 = "" + line[i];
+            }
+            else
+            {
+                //Then check if the number is written
+                string temp;
+                if (i+5 > line.Length)
+                {
+                    temp = line.Substring(i);
+                }
+                else
+                {
+                    temp = line.Substring(i, 5);
+                }
+
+                foreach (string writnum in writtenNumbers.Keys)
+                {
+                    if (temp.Contains(writnum) && num1Found)
+                    {
+                        num2 = writtenNumbers[writnum];
+                    }
+                    else if (temp.Contains(writnum))
+                    {
+                        num1Found = true;
+                        num1 = writtenNumbers[writnum];
+                        num2 = writtenNumbers[writnum];
+                    }
+                }
             }
         }
         numbers.Add(int.Parse(num1 + num2));
